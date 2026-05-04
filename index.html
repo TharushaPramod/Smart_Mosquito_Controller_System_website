@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Mosquito Controller System</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
     --blue-deep: #0a2540;
@@ -29,164 +30,71 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Outfit', sans-serif;
-    color: var(--gray-800);
-    background: var(--white);
-    line-height: 1.6;
-  }
+  body { font-family: 'Outfit', sans-serif; color: var(--gray-800); background: var(--white); line-height: 1.6; }
 
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--gray-200);
-    padding: 0 2rem;
-    height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gray-200); padding: 0 2rem;
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
   }
-  .nav-logo {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 700; font-size: 1rem; color: var(--blue-deep);
-    text-decoration: none;
-  }
-  .nav-logo .logo-icon {
-    width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-    border-radius: 10px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; color: var(--blue-deep); text-decoration: none; }
+  .nav-logo .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue-bright), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
   .nav-links { display: flex; gap: 0.25rem; list-style: none; }
-  .nav-links a {
-    text-decoration: none; color: var(--gray-600); font-size: 0.875rem; font-weight: 500;
-    padding: 0.4rem 0.85rem; border-radius: 8px;
-    transition: all 0.2s;
-  }
-  .nav-links a:hover, .nav-links a.active {
-    color: var(--blue-bright); background: var(--blue-pale);
-  }
+  .nav-links a { text-decoration: none; color: var(--gray-600); font-size: 0.875rem; font-weight: 500; padding: 0.4rem 0.85rem; border-radius: 8px; transition: all 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--blue-bright); background: var(--blue-pale); }
   .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; font-size: 1.4rem; }
 
-  /* PAGE SECTIONS */
+  /* SECTIONS */
   section { display: none; padding-top: 64px; min-height: 100vh; }
   section.active { display: block; }
 
-  /* HERO / HOME */
-  .hero {
-    background: linear-gradient(160deg, var(--blue-deep) 0%, var(--blue-mid) 50%, #1e3a6e 100%);
-    color: white;
-    padding: 6rem 2rem 5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: var(--blue-light); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
-    padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
-    text-transform: uppercase;
-  }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
-    line-height: 1.15; margin-bottom: 1rem;
-    max-width: 780px; margin-left: auto; margin-right: auto;
-  }
+  /* HERO */
+  .hero { background: linear-gradient(160deg, var(--blue-deep) 0%, var(--blue-mid) 50%, #1e3a6e 100%); color: white; padding: 6rem 2rem 5rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--blue-light); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem; text-transform: uppercase; }
+  .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.15; margin-bottom: 1rem; max-width: 780px; margin-left: auto; margin-right: auto; }
   .hero h1 em { font-style: italic; color: var(--accent); }
-  .hero-sub {
-    font-size: 1.1rem; color: rgba(255,255,255,0.72); max-width: 540px;
-    margin: 0 auto 2.5rem; font-weight: 400;
-  }
+  .hero-sub { font-size: 1.1rem; color: rgba(255,255,255,0.72); max-width: 540px; margin: 0 auto 2.5rem; font-weight: 400; }
   .hero-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-bottom: 3rem; }
-  .tag {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.85); padding: 0.35rem 0.9rem;
-    border-radius: 100px; font-size: 0.82rem; font-weight: 500;
-  }
-  .hero-stats {
-    display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
-    padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.12);
-  }
+  .tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); padding: 0.35rem 0.9rem; border-radius: 100px; font-size: 0.82rem; font-weight: 500; }
+  .hero-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.12); }
   .stat-item { text-align: center; }
   .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; }
   .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* CONTENT SECTIONS */
+  /* CONTENT */
   .section-inner { max-width: 1080px; margin: 0 auto; padding: 4rem 2rem; }
   .section-header { text-align: center; margin-bottom: 3rem; }
-  .section-tag {
-    display: inline-block; background: var(--blue-pale); color: var(--blue-bright);
-    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
-    padding: 0.3rem 0.9rem; border-radius: 100px; margin-bottom: 0.75rem; text-transform: uppercase;
-  }
-  .section-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.8rem, 3vw, 2.6rem); color: var(--blue-deep); margin-bottom: 0.75rem;
-  }
+  .section-tag { display: inline-block; background: var(--blue-pale); color: var(--blue-bright); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; padding: 0.3rem 0.9rem; border-radius: 100px; margin-bottom: 0.75rem; text-transform: uppercase; }
+  .section-header h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); color: var(--blue-deep); margin-bottom: 0.75rem; }
   .section-header p { color: var(--gray-600); max-width: 520px; margin: 0 auto; }
-
-  /* CARDS */
-  .card {
-    background: var(--white); border: 1px solid var(--gray-200);
-    border-radius: var(--radius); padding: 1.75rem;
-    box-shadow: var(--shadow-sm); transition: all 0.25s;
-  }
-  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
   /* DOMAIN GRID */
   .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
   .domain-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.75rem; transition: all 0.25s; }
   .domain-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue-bright); transform: translateY(-2px); }
-  .domain-icon {
-    width: 44px; height: 44px; background: linear-gradient(135deg, var(--blue-pale), var(--accent-light));
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; margin-bottom: 1rem;
-  }
+  .domain-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--blue-pale), var(--accent-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 1rem; }
   .domain-card h3 { font-size: 1rem; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.5rem; }
   .domain-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.65; }
 
   /* MILESTONES */
   .milestone-list { display: flex; flex-direction: column; gap: 1rem; }
-  .milestone-item {
-    background: var(--white); border: 1px solid var(--gray-200);
-    border-radius: var(--radius); overflow: hidden;
-    transition: all 0.25s;
-  }
-  .milestone-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.25rem 1.5rem; cursor: pointer;
-    user-select: none;
-  }
+  .milestone-item { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); overflow: hidden; transition: all 0.25s; }
+  .milestone-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; cursor: pointer; user-select: none; }
   .milestone-header:hover { background: var(--gray-50); }
   .milestone-left { display: flex; align-items: center; gap: 1rem; }
-  .milestone-num {
-    width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-    color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
-  }
+  .milestone-num { width: 36px; height: 36px; background: linear-gradient(135deg, var(--blue-bright), var(--accent)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
   .milestone-name { font-weight: 600; color: var(--blue-deep); font-size: 0.95rem; }
   .milestone-meta { font-size: 0.78rem; color: var(--gray-400); margin-top: 2px; }
   .milestone-right { display: flex; align-items: center; gap: 1rem; }
-  .badge {
-    padding: 0.25rem 0.75rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
-  }
+  .badge { padding: 0.25rem 0.75rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
   .badge-done { background: #dcfce7; color: #166534; }
-  .badge-pending { background: #fef9c3; color: #854d0e; }
   .badge-upcoming { background: var(--blue-pale); color: var(--blue-bright); }
   .chevron { font-size: 0.75rem; color: var(--gray-400); transition: transform 0.2s; }
-  .milestone-body {
-    display: none; padding: 0 1.5rem 1.25rem; border-top: 1px solid var(--gray-100);
-  }
+  .milestone-body { display: none; padding: 0 1.5rem 1.25rem; border-top: 1px solid var(--gray-100); }
   .milestone-body.open { display: block; }
   .milestone-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; padding-top: 1rem; }
   .detail-item label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-400); display: block; margin-bottom: 4px; }
@@ -194,19 +102,10 @@
 
   /* DOCUMENTS */
   .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-  .doc-card {
-    background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius);
-    padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem;
-    transition: all 0.25s; text-decoration: none; color: inherit; cursor: pointer;
-  }
+  .doc-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; transition: all 0.25s; text-decoration: none; color: inherit; cursor: pointer; }
   .doc-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue-bright); transform: translateY(-2px); }
-  .doc-icon {
-    width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center;
-    justify-content: center; font-size: 1.3rem; flex-shrink: 0;
-    background: linear-gradient(135deg, #fee2e2, #fecaca);
-  }
+  .doc-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
   .doc-icon.pdf { background: linear-gradient(135deg, #fee2e2, #fecaca); }
-  .doc-icon.doc { background: linear-gradient(135deg, var(--blue-pale), #bfdbfe); }
   .doc-icon.pending { background: var(--gray-100); }
   .doc-info h4 { font-size: 0.875rem; font-weight: 600; color: var(--blue-deep); margin-bottom: 3px; }
   .doc-info span { font-size: 0.75rem; color: var(--gray-400); }
@@ -214,73 +113,33 @@
   .dot-ready { background: #22c55e; }
   .dot-pending { background: #f59e0b; }
 
-  /* PRESENTATIONS */
+  /* SLIDES */
   .slides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
-  .slide-card {
-    background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
-    border-radius: var(--radius); padding: 1.75rem; color: white;
-    transition: all 0.25s; cursor: pointer; position: relative; overflow: hidden;
-  }
-  .slide-card::before {
-    content: '🎯'; position: absolute; right: -10px; top: -10px;
-    font-size: 5rem; opacity: 0.06;
-  }
+  .slide-card { background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid)); border-radius: var(--radius); padding: 1.75rem; color: white; transition: all 0.25s; cursor: pointer; position: relative; overflow: hidden; }
+  .slide-card::before { content: '🎯'; position: absolute; right: -10px; top: -10px; font-size: 5rem; opacity: 0.06; }
   .slide-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .slide-pres-num {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--blue-light); margin-bottom: 0.5rem;
-  }
+  .slide-pres-num { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 0.5rem; }
   .slide-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
   .slide-card p { font-size: 0.82rem; color: rgba(255,255,255,0.65); margin-bottom: 1rem; }
-  .slide-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-    color: white; padding: 0.4rem 0.85rem; border-radius: 8px;
-    font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: background 0.2s;
-    text-decoration: none;
-  }
+  .slide-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: background 0.2s; text-decoration: none; }
   .slide-btn:hover { background: rgba(255,255,255,0.22); }
-  .slide-pending {
-    background: var(--gray-100); color: var(--gray-400);
-  }
-  .slide-pending::before { opacity: 0.04; }
+  .slide-pending { background: var(--gray-100); }
   .slide-pending h3 { color: var(--gray-500); }
   .slide-pending p { color: var(--gray-400); }
   .slide-pending .slide-pres-num { color: var(--gray-400); }
 
   /* TEAM */
   .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
-  .team-card {
-    background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius);
-    padding: 1.75rem 1.25rem; text-align: center; transition: all 0.25s;
-  }
+  .team-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.75rem 1.25rem; text-align: center; transition: all 0.25s; }
   .team-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue-bright); transform: translateY(-2px); }
-  .team-avatar {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-    color: white; font-weight: 800; font-size: 1.4rem;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1rem;
-  }
+  .team-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-bright), var(--accent)); color: white; font-weight: 800; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
   .team-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--blue-deep); margin-bottom: 0.25rem; }
   .team-card .role { font-size: 0.78rem; color: var(--blue-bright); font-weight: 600; margin-bottom: 0.25rem; }
   .team-card .student-id { font-size: 0.75rem; color: var(--gray-400); margin-bottom: 0.75rem; }
-  .team-card .email-link {
-    font-size: 0.78rem; color: var(--blue-bright); text-decoration: none;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
+  .team-card .email-link { font-size: 0.78rem; color: var(--blue-bright); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
   .supervisor-section { margin-bottom: 2.5rem; }
-  .supervisor-card {
-    background: linear-gradient(135deg, var(--blue-pale), var(--accent-light));
-    border: 1px solid var(--blue-light); border-radius: var(--radius);
-    padding: 1.75rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
-  }
-  .supervisor-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep));
-    color: white; font-weight: 800; font-size: 1.2rem;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .supervisor-card { background: linear-gradient(135deg, var(--blue-pale), var(--accent-light)); border: 1px solid var(--blue-light); border-radius: var(--radius); padding: 1.75rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .supervisor-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-mid), var(--blue-deep)); color: white; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .supervisor-info h3 { font-size: 1.05rem; font-weight: 700; color: var(--blue-deep); }
   .supervisor-info .sup-role { font-size: 0.8rem; color: var(--blue-bright); font-weight: 600; margin-bottom: 0.2rem; }
   .supervisor-info .sup-dept { font-size: 0.82rem; color: var(--gray-600); }
@@ -289,42 +148,30 @@
   .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; }
   @media (max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
   .contact-info-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-  .contact-info-item {
-    display: flex; align-items: center; gap: 1rem;
-    background: var(--gray-50); border: 1px solid var(--gray-200);
-    border-radius: var(--radius-sm); padding: 1rem;
-  }
-  .contact-info-icon {
-    width: 40px; height: 40px; background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-    border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; flex-shrink: 0;
-  }
+  .contact-info-item { display: flex; align-items: center; gap: 1rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 1rem; }
+  .contact-info-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--blue-bright), var(--accent)); border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
   .contact-info-item h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-400); margin-bottom: 3px; }
   .contact-info-item p { font-size: 0.875rem; font-weight: 600; color: var(--gray-800); }
   .contact-form { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 2rem; }
   .contact-form h3 { font-size: 1.1rem; font-weight: 700; color: var(--blue-deep); margin-bottom: 1.25rem; }
   .form-group { margin-bottom: 1rem; }
   .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 0.4rem; }
-  .form-group input, .form-group textarea, .form-group select {
-    width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
-    font-family: 'Outfit', sans-serif; font-size: 0.875rem; color: var(--gray-800);
-    background: white; outline: none; transition: border-color 0.2s;
-  }
+  .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 0.875rem; color: var(--gray-800); background: white; outline: none; transition: border-color 0.2s; }
   .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--blue-bright); box-shadow: 0 0 0 3px var(--blue-pale); }
   .form-group textarea { resize: vertical; min-height: 110px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .btn-primary {
-    width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--blue-bright), var(--accent));
-    color: white; border: none; border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif;
-    font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;
-  }
-  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, var(--blue-bright), var(--accent)); color: white; border: none; border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:disabled { cursor: not-allowed; opacity: 0.7; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; padding: 1rem 1.5rem; border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 0.875rem; font-weight: 600; color: white; box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; gap: 0.6rem; min-width: 260px; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .toast.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
   /* FOOTER */
-  footer {
-    background: var(--blue-deep); color: rgba(255,255,255,0.6);
-    padding: 2rem; text-align: center; font-size: 0.82rem;
-  }
+  footer { background: var(--blue-deep); color: rgba(255,255,255,0.6); padding: 2rem; text-align: center; font-size: 0.82rem; }
   footer strong { color: var(--blue-light); }
 
   /* RESPONSIVE */
@@ -338,10 +185,7 @@
   }
 
   /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .fade-up { animation: fadeUp 0.5s ease forwards; }
   .fade-up-1 { animation-delay: 0.1s; opacity: 0; }
   .fade-up-2 { animation-delay: 0.2s; opacity: 0; }
@@ -350,6 +194,9 @@
 </style>
 </head>
 <body>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
 
 <nav>
   <a href="#" class="nav-logo" onclick="showSection('home')">
@@ -382,25 +229,12 @@
       <span class="tag">📱 Mobile App</span>
     </div>
     <div class="hero-stats fade-up fade-up-4">
-      <div class="stat-item">
-        <span class="stat-num">4</span>
-        <span class="stat-label">Team Members</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">2025/26</span>
-        <span class="stat-label">Academic Year</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">IT</span>
-        <span class="stat-label">Department</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">SLIIT</span>
-        <span class="stat-label">University</span>
-      </div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">Team Members</span></div>
+      <div class="stat-item"><span class="stat-num">2025/26</span><span class="stat-label">Academic Year</span></div>
+      <div class="stat-item"><span class="stat-num">IT</span><span class="stat-label">Department</span></div>
+      <div class="stat-item"><span class="stat-num">SLIIT</span><span class="stat-label">University</span></div>
     </div>
   </div>
-
   <div class="section-inner">
     <div class="section-header">
       <div class="section-tag">Project Overview</div>
@@ -436,36 +270,12 @@
       <p>A comprehensive look at the research area, gaps identified, and our objectives.</p>
     </div>
     <div class="domain-grid">
-      <div class="domain-card">
-        <div class="domain-icon">📚</div>
-        <h3>Literature Survey</h3>
-        <p>Extensive review of existing mosquito control technologies, IoT-based pest monitoring systems, and AI-powered classification models. Analysis of 40+ research papers spanning 2015–2024 in vector control and smart agriculture.</p>
-      </div>
-      <div class="domain-card">
-        <div class="domain-icon">🔍</div>
-        <h3>Research Gap</h3>
-        <p>Existing systems lack real-time adaptive response mechanisms. Most solutions are either purely chemical-based or require constant human intervention. No integrated IoT+AI solution tailored for tropical urban environments exists.</p>
-      </div>
-      <div class="domain-card">
-        <div class="domain-icon">❓</div>
-        <h3>Research Problem</h3>
-        <p>How can an automated, AI-enabled IoT system accurately detect, classify, and respond to mosquito activity in real-time to reduce disease transmission risk in urban Sri Lankan environments?</p>
-      </div>
-      <div class="domain-card">
-        <div class="domain-icon">🎯</div>
-        <h3>Research Objectives</h3>
-        <p>1) Develop real-time mosquito detection using computer vision. 2) Design IoT-based smart trap with automated response. 3) Build predictive analytics for outbreak risk scoring. 4) Create a mobile dashboard for monitoring.</p>
-      </div>
-      <div class="domain-card">
-        <div class="domain-icon">⚙️</div>
-        <h3>Methodology</h3>
-        <p>Design Science Research methodology with iterative prototyping. Phases include requirements analysis, system architecture, hardware development, ML model training, field testing, and evaluation with public health stakeholders.</p>
-      </div>
-      <div class="domain-card">
-        <div class="domain-icon">🛠️</div>
-        <h3>Technologies Used</h3>
-        <p>Raspberry Pi 4, TensorFlow Lite, OpenCV, MQTT Protocol, React Native, Node.js, Firebase Realtime DB, Python, AWS IoT Core, and custom PCB sensor arrays for environmental monitoring.</p>
-      </div>
+      <div class="domain-card"><div class="domain-icon">📚</div><h3>Literature Survey</h3><p>Extensive review of existing mosquito control technologies, IoT-based pest monitoring systems, and AI-powered classification models. Analysis of 40+ research papers spanning 2015–2024 in vector control and smart agriculture.</p></div>
+      <div class="domain-card"><div class="domain-icon">🔍</div><h3>Research Gap</h3><p>Existing systems lack real-time adaptive response mechanisms. Most solutions are either purely chemical-based or require constant human intervention. No integrated IoT+AI solution tailored for tropical urban environments exists.</p></div>
+      <div class="domain-card"><div class="domain-icon">❓</div><h3>Research Problem</h3><p>How can an automated, AI-enabled IoT system accurately detect, classify, and respond to mosquito activity in real-time to reduce disease transmission risk in urban Sri Lankan environments?</p></div>
+      <div class="domain-card"><div class="domain-icon">🎯</div><h3>Research Objectives</h3><p>1) Develop real-time mosquito detection using computer vision. 2) Design IoT-based smart trap with automated response. 3) Build predictive analytics for outbreak risk scoring. 4) Create a mobile dashboard for monitoring.</p></div>
+      <div class="domain-card"><div class="domain-icon">⚙️</div><h3>Methodology</h3><p>Design Science Research methodology with iterative prototyping. Phases include requirements analysis, system architecture, hardware development, ML model training, field testing, and evaluation with public health stakeholders.</p></div>
+      <div class="domain-card"><div class="domain-icon">🛠️</div><h3>Technologies Used</h3><p>Raspberry Pi 4, TensorFlow Lite, OpenCV, MQTT Protocol, React Native, Node.js, Firebase Realtime DB, Python, AWS IoT Core, and custom PCB sensor arrays for environmental monitoring.</p></div>
     </div>
   </div>
 </section>
@@ -479,99 +289,34 @@
       <p>Track our project progress through each key assessment milestone.</p>
     </div>
     <div class="milestone-list">
-
       <div class="milestone-item">
         <div class="milestone-header" onclick="toggleMilestone(this)">
-          <div class="milestone-left">
-            <div class="milestone-num">01</div>
-            <div>
-              <div class="milestone-name">Proposal Presentation</div>
-              <div class="milestone-meta">Initial research proposal and problem statement</div>
-            </div>
-          </div>
-          <div class="milestone-right">
-            <span class="badge badge-done">✓ Presented</span>
-            <span class="chevron">▼</span>
-          </div>
+          <div class="milestone-left"><div class="milestone-num">01</div><div><div class="milestone-name">Proposal Presentation</div><div class="milestone-meta">Initial research proposal and problem statement</div></div></div>
+          <div class="milestone-right"><span class="badge badge-done">✓ Presented</span><span class="chevron">▼</span></div>
         </div>
-        <div class="milestone-body">
-          <div class="milestone-detail">
-            <div class="detail-item"><label>Presentation Date</label><span>08 September 2025</span></div>
-            <div class="detail-item"><label>Marks Allocated</label><span>6%</span></div>
-            <div class="detail-item"><label>Status</label><span>Presented</span></div>
-          </div>
-        </div>
+        <div class="milestone-body"><div class="milestone-detail"><div class="detail-item"><label>Presentation Date</label><span>08 September 2025</span></div><div class="detail-item"><label>Marks Allocated</label><span>6%</span></div><div class="detail-item"><label>Status</label><span>Presented</span></div></div></div>
       </div>
-
       <div class="milestone-item">
         <div class="milestone-header" onclick="toggleMilestone(this)">
-          <div class="milestone-left">
-            <div class="milestone-num">02</div>
-            <div>
-              <div class="milestone-name">Progress Presentation 01</div>
-              <div class="milestone-meta">Literature review, system design & prototype demo</div>
-            </div>
-          </div>
-          <div class="milestone-right">
-            <span class="badge badge-done">✓ Presented</span>
-            <span class="chevron">▼</span>
-          </div>
+          <div class="milestone-left"><div class="milestone-num">02</div><div><div class="milestone-name">Progress Presentation 01</div><div class="milestone-meta">Literature review, system design & prototype demo</div></div></div>
+          <div class="milestone-right"><span class="badge badge-done">✓ Presented</span><span class="chevron">▼</span></div>
         </div>
-        <div class="milestone-body">
-          <div class="milestone-detail">
-            <div class="detail-item"><label>Presentation Date</label><span>07 January 2026</span></div>
-            <div class="detail-item"><label>Marks Allocated</label><span>15%</span></div>
-            <div class="detail-item"><label>Status</label><span>Presented</span></div>
-          </div>
-        </div>
+        <div class="milestone-body"><div class="milestone-detail"><div class="detail-item"><label>Presentation Date</label><span>07 January 2026</span></div><div class="detail-item"><label>Marks Allocated</label><span>15%</span></div><div class="detail-item"><label>Status</label><span>Presented</span></div></div></div>
       </div>
-
       <div class="milestone-item">
         <div class="milestone-header" onclick="toggleMilestone(this)">
-          <div class="milestone-left">
-            <div class="milestone-num">03</div>
-            <div>
-              <div class="milestone-name">Progress Presentation 02</div>
-              <div class="milestone-meta">System implementation & testing results</div>
-            </div>
-          </div>
-          <div class="milestone-right">
-            <span class="badge badge-done">✓ Presented</span>
-            <span class="chevron">▼</span>
-          </div>
+          <div class="milestone-left"><div class="milestone-num">03</div><div><div class="milestone-name">Progress Presentation 02</div><div class="milestone-meta">System implementation & testing results</div></div></div>
+          <div class="milestone-right"><span class="badge badge-done">✓ Presented</span><span class="chevron">▼</span></div>
         </div>
-        <div class="milestone-body">
-          <div class="milestone-detail">
-            <div class="detail-item"><label>Presentation Date</label><span>09 March 2026</span></div>
-            <div class="detail-item"><label>Marks Allocated</label><span>18%</span></div>
-            <div class="detail-item"><label>Status</label><span>Presented</span></div>
-          </div>
-        </div>
+        <div class="milestone-body"><div class="milestone-detail"><div class="detail-item"><label>Presentation Date</label><span>09 March 2026</span></div><div class="detail-item"><label>Marks Allocated</label><span>18%</span></div><div class="detail-item"><label>Status</label><span>Presented</span></div></div></div>
       </div>
-
       <div class="milestone-item">
         <div class="milestone-header" onclick="toggleMilestone(this)">
-          <div class="milestone-left">
-            <div class="milestone-num">04</div>
-            <div>
-              <div class="milestone-name">Final Presentation</div>
-              <div class="milestone-meta">Complete system demonstration & research outcomes</div>
-            </div>
-          </div>
-          <div class="milestone-right">
-            <span class="badge badge-upcoming">📅 Scheduled</span>
-            <span class="chevron">▼</span>
-          </div>
+          <div class="milestone-left"><div class="milestone-num">04</div><div><div class="milestone-name">Final Presentation</div><div class="milestone-meta">Complete system demonstration & research outcomes</div></div></div>
+          <div class="milestone-right"><span class="badge badge-upcoming">📅 Scheduled</span><span class="chevron">▼</span></div>
         </div>
-        <div class="milestone-body">
-          <div class="milestone-detail">
-            <div class="detail-item"><label>Presentation Date</label><span>04 May 2026</span></div>
-            <div class="detail-item"><label>Marks Allocated</label><span>10%</span></div>
-            <div class="detail-item"><label>Status</label><span>Scheduled</span></div>
-          </div>
-        </div>
+        <div class="milestone-body"><div class="milestone-detail"><div class="detail-item"><label>Presentation Date</label><span>04 May 2026</span></div><div class="detail-item"><label>Marks Allocated</label><span>10%</span></div><div class="detail-item"><label>Status</label><span>Scheduled</span></div></div></div>
       </div>
-
     </div>
   </div>
 </section>
@@ -584,53 +329,19 @@
       <h2>Project Documents</h2>
       <p>All official documents, reports, and checklists for the project.</p>
     </div>
-
     <h3 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);margin-bottom:1rem;">Submitted Documents</h3>
     <div class="doc-grid" style="margin-bottom:2rem;">
-      <div class="doc-card" onclick="openDoc('documents/TAF_25-26J-369.pdf')">
-        <div class="doc-icon pdf">📄</div>
-        <div class="doc-info"><h4>Project Charter</h4><span>TAF_25-26J-369.pdf</span></div>
-        <div class="doc-status-dot dot-ready"></div>
-      </div>
-      <div class="doc-card" onclick="openDoc('documents/Proposal _Report__IT22600202.pdf')">
-        <div class="doc-icon pdf">📄</div>
-        <div class="doc-info"><h4>Proposal – Pramod U.A.T</h4><span>IT22600202</span></div>
-        <div class="doc-status-dot dot-ready"></div>
-      </div>
-      <div class="doc-card" onclick="openDoc('documents/Proposal_Report_IT22578600.pdf')">
-        <div class="doc-icon pdf">📄</div>
-        <div class="doc-info"><h4>Proposal – Wickrama Arachchi A.D.P.R</h4><span>IT22578600</span></div>
-        <div class="doc-status-dot dot-ready"></div>
-      </div>
-      <div class="doc-card" onclick="openDoc('documents/Proposal Report_IT22568946 .pdf')">
-        <div class="doc-icon pdf">📄</div>
-        <div class="doc-info"><h4>Proposal – Rathnayaka R.M.G.M</h4><span>IT22568946</span></div>
-        <div class="doc-status-dot dot-ready"></div>
-      </div>
-      <div class="doc-card" onclick="openDoc('documents/Proposal Report _ IT22604576.pdf')">
-        <div class="doc-icon pdf">📄</div>
-        <div class="doc-info"><h4>Proposal – Mithara M.D.N</h4><span>IT22604576</span></div>
-        <div class="doc-status-dot dot-ready"></div>
-      </div>
+      <div class="doc-card" onclick="openDoc('documents/TAF_25-26J-369.pdf')"><div class="doc-icon pdf">📄</div><div class="doc-info"><h4>Project Charter</h4><span>TAF_25-26J-369.pdf</span></div><div class="doc-status-dot dot-ready"></div></div>
+      <div class="doc-card" onclick="openDoc('documents/Proposal _Report__IT22600202.pdf')"><div class="doc-icon pdf">📄</div><div class="doc-info"><h4>Proposal – Pramod U.A.T</h4><span>IT22600202</span></div><div class="doc-status-dot dot-ready"></div></div>
+      <div class="doc-card" onclick="openDoc('documents/Proposal_Report_IT22578600.pdf')"><div class="doc-icon pdf">📄</div><div class="doc-info"><h4>Proposal – Wickrama Arachchi A.D.P.R</h4><span>IT22578600</span></div><div class="doc-status-dot dot-ready"></div></div>
+      <div class="doc-card" onclick="openDoc('documents/Proposal Report_IT22568946 .pdf')"><div class="doc-icon pdf">📄</div><div class="doc-info"><h4>Proposal – Rathnayaka R.M.G.M</h4><span>IT22568946</span></div><div class="doc-status-dot dot-ready"></div></div>
+      <div class="doc-card" onclick="openDoc('documents/Proposal Report _ IT22604576.pdf')"><div class="doc-icon pdf">📄</div><div class="doc-info"><h4>Proposal – Mithara M.D.N</h4><span>IT22604576</span></div><div class="doc-status-dot dot-ready"></div></div>
     </div>
-
     <h3 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);margin-bottom:1rem;">Pending Documents</h3>
     <div class="doc-grid">
-      <div class="doc-card" style="cursor:default;opacity:0.6;">
-        <div class="doc-icon pending">📄</div>
-        <div class="doc-info"><h4>Research Paper</h4><span>Pending submission</span></div>
-        <div class="doc-status-dot dot-pending"></div>
-      </div>
-      <div class="doc-card" style="cursor:default;opacity:0.6;">
-        <div class="doc-icon pending">📄</div>
-        <div class="doc-info"><h4>Final Report – Group</h4><span>Pending submission</span></div>
-        <div class="doc-status-dot dot-pending"></div>
-      </div>
-      <div class="doc-card" style="cursor:default;opacity:0.6;">
-        <div class="doc-icon pending">📄</div>
-        <div class="doc-info"><h4>Final Report – Individual Reports</h4><span>Pending submission</span></div>
-        <div class="doc-status-dot dot-pending"></div>
-      </div>
+      <div class="doc-card" style="cursor:default;opacity:0.6;"><div class="doc-icon pending">📄</div><div class="doc-info"><h4>Research Paper</h4><span>Pending submission</span></div><div class="doc-status-dot dot-pending"></div></div>
+      <div class="doc-card" style="cursor:default;opacity:0.6;"><div class="doc-icon pending">📄</div><div class="doc-info"><h4>Final Report – Group</h4><span>Pending submission</span></div><div class="doc-status-dot dot-pending"></div></div>
+      <div class="doc-card" style="cursor:default;opacity:0.6;"><div class="doc-icon pending">📄</div><div class="doc-info"><h4>Final Report – Individual Reports</h4><span>Pending submission</span></div><div class="doc-status-dot dot-pending"></div></div>
     </div>
   </div>
 </section>
@@ -654,24 +365,14 @@
         <div class="slide-pres-num">Presentation 02</div>
         <h3>Progress Presentation 01</h3>
         <p>Literature review findings, system architecture & initial prototype demo.</p>
-        <div style="margin:0.75rem 0 0.9rem;">
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.6);margin-bottom:5px;"><span>Completion</span><span>50%</span></div>
-          <div style="background:rgba(255,255,255,0.15);border-radius:100px;height:6px;">
-            <div style="width:50%;background:linear-gradient(90deg,#60a5fa,#06b6d4);border-radius:100px;height:6px;"></div>
-          </div>
-        </div>
+        <div style="margin:0.75rem 0 0.9rem;"><div style="display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.6);margin-bottom:5px;"><span>Completion</span><span>50%</span></div><div style="background:rgba(255,255,255,0.15);border-radius:100px;height:6px;"><div style="width:50%;background:linear-gradient(90deg,#60a5fa,#06b6d4);border-radius:100px;height:6px;"></div></div></div>
         <a class="slide-btn" href="slides/PP1 Presentation_edited.pptx" target="_blank">⬇ View Slides</a>
       </div>
       <div class="slide-card">
         <div class="slide-pres-num">Presentation 03</div>
         <h3>Progress Presentation 02</h3>
         <p>System implementation, testing results & evaluation findings.</p>
-        <div style="margin:0.75rem 0 0.9rem;">
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.6);margin-bottom:5px;"><span>Completion</span><span>90%</span></div>
-          <div style="background:rgba(255,255,255,0.15);border-radius:100px;height:6px;">
-            <div style="width:90%;background:linear-gradient(90deg,#60a5fa,#06b6d4);border-radius:100px;height:6px;"></div>
-          </div>
-        </div>
+        <div style="margin:0.75rem 0 0.9rem;"><div style="display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.6);margin-bottom:5px;"><span>Completion</span><span>90%</span></div><div style="background:rgba(255,255,255,0.15);border-radius:100px;height:6px;"><div style="width:90%;background:linear-gradient(90deg,#60a5fa,#06b6d4);border-radius:100px;height:6px;"></div></div></div>
         <a class="slide-btn" href="slides/PP2 presentation.pptx" target="_blank">⬇ View Slides</a>
       </div>
       <div class="slide-card slide-pending">
@@ -692,7 +393,6 @@
       <h2>About Us</h2>
       <p>4th year IT undergraduates from SLIIT passionate about smart health-tech solutions.</p>
     </div>
-
     <div class="supervisor-section">
       <h3 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);margin-bottom:1rem;">Supervisor</h3>
       <div class="supervisor-card">
@@ -705,37 +405,12 @@
         </div>
       </div>
     </div>
-
     <h3 style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--gray-400);margin-bottom:1rem;">Group Members · 25-26J-369</h3>
     <div class="team-grid">
-      <div class="team-card">
-        <div class="team-avatar">PU</div>
-        <h3>Pramod U.A.T</h3>
-        <div class="role">Team Leader</div>
-        <div class="student-id">IT22600202</div>
-        <a href="mailto:IT22600202@my.sliit.lk" class="email-link">✉ IT22600202@my.sliit.lk</a>
-      </div>
-      <div class="team-card">
-        <div class="team-avatar">WA</div>
-        <h3>Wickrama Arachchi A.D.P.R</h3>
-        <div class="role">Member</div>
-        <div class="student-id">IT22578600</div>
-        <a href="mailto:IT22578600@my.sliit.lk" class="email-link">✉ IT22578600@my.sliit.lk</a>
-      </div>
-      <div class="team-card">
-        <div class="team-avatar">RR</div>
-        <h3>Rathnayaka R.M.G.M</h3>
-        <div class="role">Member</div>
-        <div class="student-id">IT22568946</div>
-        <a href="mailto:IT22568946@my.sliit.lk" class="email-link">✉ IT22568946@my.sliit.lk</a>
-      </div>
-      <div class="team-card">
-        <div class="team-avatar">MM</div>
-        <h3>Mithara M.D.N</h3>
-        <div class="role">Member</div>
-        <div class="student-id">IT22604576</div>
-        <a href="mailto:IT22604576@my.sliit.lk" class="email-link">✉ IT22604576@my.sliit.lk</a>
-      </div>
+      <div class="team-card"><div class="team-avatar">PU</div><h3>Pramod U.A.T</h3><div class="role">Team Leader</div><div class="student-id">IT22600202</div><a href="mailto:IT22600202@my.sliit.lk" class="email-link">✉ IT22600202@my.sliit.lk</a></div>
+      <div class="team-card"><div class="team-avatar">WA</div><h3>Wickrama Arachchi A.D.P.R</h3><div class="role">Member</div><div class="student-id">IT22578600</div><a href="mailto:IT22578600@my.sliit.lk" class="email-link">✉ IT22578600@my.sliit.lk</a></div>
+      <div class="team-card"><div class="team-avatar">RR</div><h3>Rathnayaka R.M.G.M</h3><div class="role">Member</div><div class="student-id">IT22568946</div><a href="mailto:IT22568946@my.sliit.lk" class="email-link">✉ IT22568946@my.sliit.lk</a></div>
+      <div class="team-card"><div class="team-avatar">MM</div><h3>Mithara M.D.N</h3><div class="role">Member</div><div class="student-id">IT22604576</div><a href="mailto:IT22604576@my.sliit.lk" class="email-link">✉ IT22604576@my.sliit.lk</a></div>
     </div>
   </div>
 </section>
@@ -751,42 +426,30 @@
     <div class="contact-grid">
       <div>
         <div class="contact-info-list">
-          <div class="contact-info-item">
-            <div class="contact-info-icon">🏫</div>
-            <div><h4>Institution</h4><p>Sri Lanka Institute of Information Technology (SLIIT)</p></div>
-          </div>
-          <div class="contact-info-item">
-            <div class="contact-info-icon">📍</div>
-            <div><h4>Address</h4><p>New Kandy Road, Malabe, Sri Lanka 10115</p></div>
-          </div>
-          <div class="contact-info-item">
-            <div class="contact-info-icon">🎓</div>
-            <div><h4>Department</h4><p>Information Technology</p></div>
-          </div>
-          <div class="contact-info-item">
-            <div class="contact-info-icon">📅</div>
-            <div><h4>Academic Year</h4><p>2025 / 2026</p></div>
-          </div>
+          <div class="contact-info-item"><div class="contact-info-icon">🏫</div><div><h4>Institution</h4><p>Sri Lanka Institute of Information Technology (SLIIT)</p></div></div>
+          <div class="contact-info-item"><div class="contact-info-icon">📍</div><div><h4>Address</h4><p>New Kandy Road, Malabe, Sri Lanka 10115</p></div></div>
+          <div class="contact-info-item"><div class="contact-info-icon">🎓</div><div><h4>Department</h4><p>Information Technology</p></div></div>
+          <div class="contact-info-item"><div class="contact-info-icon">📅</div><div><h4>Academic Year</h4><p>2025 / 2026</p></div></div>
         </div>
       </div>
       <div class="contact-form">
         <h3>Send us a Message</h3>
         <div class="form-row">
-          <div class="form-group"><label>First Name</label><input type="text" placeholder="John"></div>
-          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+          <div class="form-group"><label>First Name *</label><input type="text" id="firstName" placeholder="John"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="lastName" placeholder="Doe"></div>
         </div>
-        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@example.com"></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="emailInput" placeholder="john@example.com"></div>
         <div class="form-group">
           <label>Subject</label>
-          <select>
+          <select id="subjectSelect">
             <option>Research Inquiry</option>
             <option>Collaboration</option>
             <option>Feedback</option>
             <option>Other</option>
           </select>
         </div>
-        <div class="form-group"><label>Message</label><textarea placeholder="Write your message here..."></textarea></div>
-        <button class="btn-primary">Send Message ✈</button>
+        <div class="form-group"><label>Message *</label><textarea id="messageInput" placeholder="Write your message here..."></textarea></div>
+        <button class="btn-primary" id="sendBtn" onclick="sendEmail()">Send Message ✈</button>
       </div>
     </div>
   </div>
@@ -797,9 +460,80 @@
 </footer>
 
 <script>
-  function openDoc(path) {
-    window.open(path, '_blank');
+  // ================================================================
+  //  EMAILJS CONFIG — meka 3 lines update karanna
+  //  Steps:
+  //   1. https://emailjs.com → Sign Up (free)
+  //   2. Email Services → Add Service → Gmail → pramodtharusha@gmail.com
+  //   3. Email Templates → Create Template:
+  //        Subject: "New Message: {{subject}}"
+  //        Body:    "From: {{from_name}} ({{from_email}})\n\n{{message}}"
+  //   4. Account → General → Public Key copy karanna
+  //   5. Meka 3 values replace karanna then save!
+  // ================================================================
+  const EMAILJS_PUBLIC_KEY  = "jxXtttjevF7n0kySO";
+  const EMAILJS_SERVICE_ID  = "service_fx180mk";
+  const EMAILJS_TEMPLATE_ID = "template_1den5z1";
+  // ================================================================
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  function sendEmail() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('emailInput').value.trim();
+    const subject   = document.getElementById('subjectSelect').value;
+    const message   = document.getElementById('messageInput').value.trim();
+    const btn       = document.getElementById('sendBtn');
+
+    if (!firstName) { showToast('error', '⚠️ Please enter your first name.'); return; }
+    if (!email || !email.includes('@')) { showToast('error', '⚠️ Please enter a valid email.'); return; }
+    if (!message) { showToast('error', '⚠️ Message cannot be empty.'); return; }
+
+    if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
+      showToast('error', '⚙️ EmailJS not configured yet! See code comments.');
+      return;
+    }
+
+    btn.textContent = '⏳ Sending...';
+    btn.disabled = true;
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      from_name:  firstName + (lastName ? ' ' + lastName : ''),
+      from_email: email,
+      subject:    subject,
+      message:    message,
+    })
+    .then(() => {
+      showToast('success', '✅ Message sent! We\'ll get back to you soon.');
+      btn.textContent = '✅ Sent!';
+      btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value  = '';
+      document.getElementById('emailInput').value = '';
+      document.getElementById('messageInput').value = '';
+      setTimeout(() => {
+        btn.textContent = 'Send Message ✈';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 5000);
+    })
+    .catch((err) => {
+      console.error('EmailJS error:', err);
+      showToast('error', '❌ Send failed. Please try again.');
+      btn.textContent = 'Send Message ✈';
+      btn.disabled = false;
+    });
   }
+
+  function showToast(type, msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast ' + type + ' show';
+    setTimeout(() => { toast.classList.remove('show'); }, 4500);
+  }
+
+  function openDoc(path) { window.open(path, '_blank'); }
 
   function showSection(id) {
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
